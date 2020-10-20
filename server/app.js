@@ -12,6 +12,7 @@ const {MONGO_URI} = config;
 // Routes
 const postsRoutes = require('./routes/api/post');
 const userRoutes = require('./routes/api/user');
+const authRoutes = require('./routes/api/auth');
 
 
 app.get(hpp());
@@ -31,5 +32,6 @@ mongoose.connect(MONGO_URI, {
 app.get('/');
 app.use('/api/post', postsRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app;

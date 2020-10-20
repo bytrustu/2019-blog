@@ -1,7 +1,8 @@
 const app = require('./app');
-const HOST = '0.0.0.0';
-const PORT = 7000;
+const config = require('./config/index');
+
+const {PORT} = config;
 
 app.listen(PORT, () => {
-    console.log(`Running on http://${HOST}:${PORT}`);
+    console.log(`Running on Port ${PORT}`);
 });
