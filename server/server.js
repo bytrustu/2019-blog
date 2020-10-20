@@ -1,5 +1,7 @@
 const app = require('./app');
+const HOST = '0.0.0.0';
+const PORT = 7000;
 
-app.listen('7000', () => {
-    console.log('success');
+app.listen(HOST, PORT, () => {
+    console.log(`Running on http://${HOST}:${PORT}`);
 });
