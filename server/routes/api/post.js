@@ -12,7 +12,7 @@ router.get('/', async(req, res) => {
     res.json(postFindResult);
 });
 
-router.post('/', async(req, res, next) => {
+router.post('/', async(req, res) => {
     try {
         console.log(req, "req");
         const {title, contents, fileUrl, creator} = req.body;

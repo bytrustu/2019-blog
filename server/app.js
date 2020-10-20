@@ -11,6 +11,7 @@ const {MONGO_URI} = config;
 
 // Routes
 const postsRoutes = require('./routes/api/post');
+const userRoutes = require('./routes/api/user');
 
 
 app.get(hpp());
@@ -29,5 +30,6 @@ mongoose.connect(MONGO_URI, {
 // Use routes
 app.get('/');
 app.use('/api/post', postsRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;
