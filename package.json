@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./server/server.js --exe babel-node"
+    "dev": "nodemon ./server/server.js --exe babel-node --ignore './client'"
   },
   "repository": {
     "type": "git",
