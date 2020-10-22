@@ -7,6 +7,8 @@ import MyRouter from "./routes/Router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './assets/custom.scss';
 
+
+
 const App = () => {
     return (
         <Provider store={store}>

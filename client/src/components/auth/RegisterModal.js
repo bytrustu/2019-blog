@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {CLEAR_ERROR_REQUEST, REGISTER_REQUEST, REGISTER_SUCCESS} from "../../redux/types";
+import {CLEAR_ERROR_REQUEST, REGISTER_REQUEST} from "../../redux/types";
 import {NavLink, Modal, ModalHeader, ModalBody, Alert, Form, FormGroup, Label, Input, Button} from "reactstrap";
 
 const RegisterModal = () => {
@@ -11,8 +11,7 @@ const RegisterModal = () => {
         password: ''
     });
     const [localMsg, setLocalMsg] = useState('');
-    const {} = useSelector((state) => state.auth);
-
+    const { errorMsg } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const handleToggle = () => {
         dispatch({
@@ -23,11 +22,11 @@ const RegisterModal = () => {
 
     useEffect(() => {
         try {
-            setLocalMsg(localMsg);
+            setLocalMsg(errorMsg);
         } catch (e) {
             console.log(e);
         }
-    }, [localMsg]);
+    }, [errorMsg]);
 
     const onChange = (e) => {
         setForm({
