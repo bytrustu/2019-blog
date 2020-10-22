@@ -1,4 +1,6 @@
 import {
+    POST_DETAIL_LOADING_FAILURE, POST_DETAIL_LOADING_REQUEST,
+    POST_DETAIL_LOADING_SUCCESS,
     POST_UPLOADING_FAILURE, POST_UPLOADING_REQUEST,
     POST_UPLOADING_SUCCESS,
     POSTS_LOADING_FAILURE,
@@ -27,7 +29,7 @@ function* loadPost() {
             type: POSTS_LOADING_FAILURE,
             payload: e
         })
-        yield push('/');
+        yield put(push('/'));
     }
 }
 
@@ -59,13 +61,13 @@ function* uploadPost(action) {
             type: POST_UPLOADING_SUCCESS,
             payload: result.data,
         });
-        yield put(`/post/${result.data._id}`)
+        yield put(push(`/post/${result.data._id}`));
     } catch (e) {
         yield put({
             type: POST_UPLOADING_FAILURE,
             payload: e
         })
-        yield push('/');
+        yield put(push('/'));
     }
 }
 
@@ -73,9 +75,38 @@ function* watchUploadPost() {
     yield takeEvery(POST_UPLOADING_REQUEST, uploadPost);
 }
 
+// Post Detail
+const loadPostDetailAPI = (payload) => {
+    console.log(payload)
+    return axios.get(`/api/post/${payload}`)
+}
+
+function* loadPostDetail(action) {
+    try {
+        const result = yield call(loadPostDetailAPI, action.payload);
+        console.log(result, 'post_detail_saga_data');
+        yield put({
+            type: POST_DETAIL_LOADING_SUCCESS,
+            payload: result.data,
+        });
+    } catch (e) {
+        yield put({
+            type: POST_DETAIL_LOADING_FAILURE,
+            payload: e
+        })
+        yield put(push('/'));
+    }
+}
+
+function* watchLoadPostDetail() {
+    yield takeEvery(POST_DETAIL_LOADING_REQUEST, loadPostDetail);
+}
+
+
 export default function* postSaga() {
     yield all([
         fork(watchLoadPost),
-        fork(watchUploadPost)
+        fork(watchUploadPost),
+        fork(watchLoadPostDetail),
     ])
 }
