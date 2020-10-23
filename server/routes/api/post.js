@@ -1,6 +1,7 @@
 const express = require('express');
 const moment = require('moment');
 const {isNullOrUndefined} = require('util');
+import "@babel/polyfill";
 
 // Model
 const Post = require('../../models/post');
