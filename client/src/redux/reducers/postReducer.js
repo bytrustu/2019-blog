@@ -13,7 +13,7 @@ import {
     POSTS_LOADING_SUCCESS,
     POSTS_WRITE_FAILURE,
     POSTS_WRITE_REQUEST,
-    POSTS_WRITE_SUCCESS
+    POSTS_WRITE_SUCCESS, SEARCH_FAILURE, SEARCH_REQUEST, SEARCH_SUCCESS
 } from "../types";
 
 const initialState = {
@@ -125,7 +125,7 @@ export default function(state = initialState, action) {
         case CATEGORY_FIND_REQUEST:
             return {
                 ...state,
-                post: [],
+                posts: [],
                 loading: true
             }
         case CATEGORY_FIND_SUCCESS:
@@ -138,6 +138,26 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 categoryFindResult: action.payload,
+                loading: false,
+            }
+        case SEARCH_REQUEST:
+            return {
+                ...state,
+                posts: [],
+                searchBy: action.payload,
+                loading: true
+            }
+        case SEARCH_SUCCESS:
+            return {
+                ...state,
+                searchBy: action.payload,
+                searchResult: action.payload,
+                loading: false,
+            }
+        case SEARCH_FAILURE:
+            return {
+                ...state,
+                searchResult: action.payload,
                 loading: false,
             }
 

@@ -16,7 +16,7 @@ import {
     POST_UPLOADING_SUCCESS,
     POSTS_LOADING_FAILURE,
     POSTS_LOADING_REQUEST,
-    POSTS_LOADING_SUCCESS
+    POSTS_LOADING_SUCCESS, SEARCH_FAILURE, SEARCH_REQUEST, SEARCH_SUCCESS
 } from '../types';
 import {put, takeEvery, all, fork, call} from 'redux-saga/effects';
 import {push} from 'connected-react-router';
@@ -241,6 +241,32 @@ function* watchCategoryFind() {
     yield takeEvery(CATEGORY_FIND_REQUEST, categoryFind);
 }
 
+// Search
+const searchAPI = (payload) => {
+    return axios.get(`/api/search/${encodeURIComponent(payload)}`);
+};
+
+function* search(action) {
+    try {
+        const result = yield call(searchAPI, action.payload);
+        yield put({
+            type: SEARCH_SUCCESS,
+            payload: result.data,
+        });
+        yield put(push(`/search/${encodeURIComponent(action.payload)}`))
+    } catch (e) {
+        yield put({
+            type: SEARCH_FAILURE,
+            payload: e
+        });
+        yield put(push('/'));
+    }
+}
+
+function* watchSearch() {
+    yield takeEvery(SEARCH_REQUEST, search);
+}
+
 export default function* postSaga() {
     yield all([
         fork(watchLoadPost),
@@ -250,5 +276,6 @@ export default function* postSaga() {
         fork(watchPostEditLoad),
         fork(watchPostEditUpload),
         fork(watchCategoryFind),
+        fork(watchSearch),
     ]);
 }
