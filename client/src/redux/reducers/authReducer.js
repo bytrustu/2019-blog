@@ -7,7 +7,12 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_FAILURE,
     LOGOUT_REQUEST,
-    LOGOUT_SUCCESS, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS,
+    LOGOUT_SUCCESS, PASSWORD_EDIT_UPLOADING_FAILURE,
+    PASSWORD_EDIT_UPLOADING_REQUEST,
+    PASSWORD_EDIT_UPLOADING_SUCCESS,
+    REGISTER_FAILURE,
+    REGISTER_REQUEST,
+    REGISTER_SUCCESS,
     USER_LOADING_FAILURE,
     USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS
@@ -22,7 +27,9 @@ const initialState = {
     userName: '',
     userRole: '',
     errorMsg: '',
-    successMsg: ''
+    successMsg: '',
+    previousMsg: '',
+    previousMatchMsg: ''
 }
 
 const authReducer = (state = initialState, action) => {
@@ -103,23 +110,49 @@ const authReducer = (state = initialState, action) => {
                 userRole: "",
             };
 
+        case PASSWORD_EDIT_UPLOADING_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            }
+
+        case PASSWORD_EDIT_UPLOADING_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                successMsg: action.payload.data.success_msg,
+                errorMsg: '',
+                previousMatchMsg: '',
+
+            }
+
+        case PASSWORD_EDIT_UPLOADING_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                successMsg: '',
+                errorMsg: action.payload.data.fail_msg,
+                previousMatchMsg: action.payload.data.match_msg,
+            }
         case CLEAR_ERROR_REQUEST:
             return {
                 ...state,
-                errorMsg: null,
             }
 
         case CLEAR_ERROR_SUCCESS:
             return {
                 ...state,
-                errorMsg: null,
+                errorMsg: '',
+                previousMatchMsg: ''
             }
 
         case CLEAR_ERROR_FAILURE:
             return {
                 ...state,
-                errorMsg: null,
+                errorMsg: 'Clear Error Fail',
+                previousMatchMsg: 'Clear Error Fail',
             }
+
 
         default:
             return state;

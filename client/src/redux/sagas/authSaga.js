@@ -2,13 +2,20 @@ import axios from 'axios'
 import {call, put, takeEvery, all, fork} from 'redux-saga/effects';
 import {
     CLEAR_ERROR_FAILURE,
-    CLEAR_ERROR_REQUEST, CLEAR_ERROR_SUCCESS,
+    CLEAR_ERROR_REQUEST,
+    CLEAR_ERROR_SUCCESS,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGOUT_FAILURE,
     LOGOUT_REQUEST,
-    LOGOUT_SUCCESS, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS, USER_LOADING_FAILURE, USER_LOADING_REQUEST,
+    LOGOUT_SUCCESS, PASSWORD_EDIT_UPLOADING_FAILURE, PASSWORD_EDIT_UPLOADING_REQUEST,
+    PASSWORD_EDIT_UPLOADING_SUCCESS,
+    REGISTER_FAILURE,
+    REGISTER_REQUEST,
+    REGISTER_SUCCESS,
+    USER_LOADING_FAILURE,
+    USER_LOADING_REQUEST,
     USER_LOADING_SUCCESS
 } from '../types'
 
@@ -142,6 +149,39 @@ function* watchRegisterUser() {
     yield takeEvery(REGISTER_REQUEST, registerUser);
 }
 
+// Edit Password
+const editPasswordAPI = (payload) => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    const token = payload.token;
+    if (token) {
+        config.headers["x-auth-token"] = token;
+    }
+    return axios.post(`/api/user/${payload.userName}/profile`, payload, config);
+};
+
+function* editPassword(action) {
+    try {
+        const result = yield call(editPasswordAPI, action.payload);
+        yield put({
+            type: PASSWORD_EDIT_UPLOADING_SUCCESS,
+            payload: result,
+        });
+    } catch (e) {
+        yield put({
+            type: PASSWORD_EDIT_UPLOADING_FAILURE,
+            payload: e.response,
+        });
+    }
+}
+
+function* watchEditPassword() {
+    yield takeEvery(PASSWORD_EDIT_UPLOADING_REQUEST, editPassword);
+}
+
 
 export default function* authSaga() {
     yield all([
@@ -150,5 +190,6 @@ export default function* authSaga() {
         fork(watchClearError),
         fork(watchUserLoading),
         fork(watchRegisterUser),
+        fork(watchEditPassword),
     ])
 }
