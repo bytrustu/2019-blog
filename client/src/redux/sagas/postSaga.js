@@ -1,4 +1,6 @@
 import {
+    POST_DELETE_FAILURE, POST_DELETE_REQUEST,
+    POST_DELETE_SUCCESS,
     POST_DETAIL_LOADING_FAILURE, POST_DETAIL_LOADING_REQUEST,
     POST_DETAIL_LOADING_SUCCESS,
     POST_UPLOADING_FAILURE, POST_UPLOADING_REQUEST,
@@ -54,9 +56,7 @@ const uploadPostAPI = (payload) => {
 
 function* uploadPost(action) {
     try {
-        console.log(action, "uploadPost function");
         const result = yield call(uploadPostAPI, action.payload);
-        console.log(result, "uploadPostAPI, action.payload");
         yield put({
             type: POST_UPLOADING_SUCCESS,
             payload: result.data,
@@ -103,11 +103,48 @@ function* watchLoadPostDetail() {
 }
 
 
+// Delete Post
+const deletePostAPI = (payload) => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    const token = payload.token;
+
+    if (token) {
+        config.headers["x-auth-token"] = token;
+    }
+    return axios.delete(`/api/post/${payload.id}`, config);
+};
+
+function* deletePost(action) {
+    try {
+        const result = yield call(deletePostAPI, action.payload);
+        yield put({
+            type: POST_DELETE_SUCCESS,
+            payload: result.data,
+        });
+        yield put(push(`/`));
+    } catch (e) {
+        yield put({
+            type: POST_DELETE_FAILURE,
+            payload: e
+        })
+    }
+}
+
+function* watchDeletePost() {
+    yield takeEvery(POST_DELETE_REQUEST, deletePost);
+}
+
+
 
 export default function* postSaga() {
     yield all([
         fork(watchLoadPost),
         fork(watchUploadPost),
         fork(watchLoadPostDetail),
+        fork(watchDeletePost),
     ])
 }
