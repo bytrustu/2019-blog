@@ -50,3 +50,9 @@ html {
 textarea {
   resize: none;
 }
+
+.my-category {
+  &:last-child {
+    margin-bottom: 0.25rem;
+  }
+}
