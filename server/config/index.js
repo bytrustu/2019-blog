@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '../.env') })
+dotenv.config()
 
 module.exports = {
     MONGO_URI: process.env.MONGO_URI,
