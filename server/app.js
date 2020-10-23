@@ -5,9 +5,12 @@ const hpp = require("hpp");
 const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
+const path = require("path");
 
 const app = express();
 const {MONGO_URI} = config;
+
+const prod = process.env.NODE_ENV === 'production';
 
 // Routes
 const postsRoutes = require('./routes/api/post');
@@ -34,5 +37,12 @@ app.use('/api/post', postsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/search', searchRoutes);
+
+if (prod) {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    })
+}
 
 module.exports = app;

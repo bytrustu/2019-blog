@@ -21,7 +21,6 @@ router.get('/', async (req, res) => {
         }
         res.status(200).json(users);
     } catch (e) {
-        console.log(e);
         res.status(400).json({msg: e.message});
     }
 });
@@ -30,7 +29,6 @@ router.get('/', async (req, res) => {
 // @desc    Register user
 // @access  public
 router.post('/', (req, res) => {
-    console.log(req.body);
     const {name, email, password} = req.body;
 
     // Simple validation

@@ -44,7 +44,6 @@ const uploadS3 = multer({
 
 router.post("/image", uploadS3.array("upload", 5), async (req, res, next) => {
     try {
-        console.log(req.files.map((v) => v.location));
         res.json({uploaded: true, url: req.files.map((v) => v.location)});
     } catch (e) {
         console.error(e);
@@ -64,7 +63,6 @@ router.get('/', async (req, res) => {
 //  @desc   Create a Post
 //  @access Private
 router.post("/", auth, uploadS3.none(), async (req, res, next) => {
-    console.log(req.user, `===>>>>> write`)
     try {
         const {title, contents, fileUrl, creator, category} = req.body;
         const newPost = await Post.create({
@@ -124,7 +122,6 @@ router.get('/:id', async (req, res, next) => {
             .populate({path: "category", select: "categoryName"});
         post.views += 1;
         post.save();
-        console.log(post);
         res.json(post);
     } catch (e) {
         console.error(e);
@@ -144,7 +141,6 @@ router.get('/:id/comments', async (req, res) => {
             path: 'comments'
         })
         const result = comment.comments;
-        console.log(result, 'comment load');
         res.json(result);
     } catch (e) {
         console.log(e);
@@ -160,7 +156,6 @@ router.post('/:id/comments', async (req, res, next) => {
         post: req.body.id,
         date: moment().format('YYYY-MM-DD hh:mm:ss')
     });
-    console.log(newComment, 'newComment')
     try {
         await Post.findByIdAndUpdate(req.body.id, {
             $push: {
@@ -188,7 +183,6 @@ router.post('/:id/comments', async (req, res, next) => {
 // @access   Private
 
 router.delete("/:id", auth, async (req, res) => {
-    console.log(`2124>>>`, req.user.id)
     await Post.deleteMany({ _id: req.params.id });
     await Comment.deleteMany({ post: req.params.id });
     await User.findByIdAndUpdate(req.user.id, {
@@ -226,7 +220,6 @@ router.get('/:id/edit', auth, async(req, res, next) => {
 // @access  Private
 router.post('/:id/edit', auth, async(req, res, next) => {
    try {
-       console.log(req, "api/post/:id/edit");
        const {body: {title, contents, fileUrl, id}} = req;
        const modified_post = await Post.findByIdAndUpdate(
            id, {
@@ -234,7 +227,6 @@ router.post('/:id/edit', auth, async(req, res, next) => {
            },
            { new: true }
        )
-       console.log(modified_post, "edit modified");
        res.redirect(`/api/post/${modified_post.id}`);
    }  catch (e) {
        console.error(e);
@@ -246,7 +238,6 @@ router.post('/:id/edit', auth, async(req, res, next) => {
 // @desc    Search Category
 // @access  Public
 router.get('/category/:categoryName', async (req, res, next) => {
-    console.log(req.params.categoryName, `>>>>@@@@`);
    try {
        const result = await Category.findOne({
            categoryName: {
