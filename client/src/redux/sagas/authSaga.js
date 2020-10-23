@@ -21,7 +21,6 @@ import {
 
 // Login
 const loginUserAPI = (loginData) => {
-    console.log(loginData, "loginData");
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -33,7 +32,6 @@ const loginUserAPI = (loginData) => {
 function* loginUser(action) {
     try {
         const result = yield call(loginUserAPI, action.payload);
-        console.log(result);
         yield put({
             type: LOGIN_SUCCESS,
             payload: result.data
@@ -88,8 +86,6 @@ function* watchClearError() {
 
 // User Loading
 const userLoadingAPI = (token) => {
-    console.log(token);
-
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -103,7 +99,6 @@ const userLoadingAPI = (token) => {
 
 function* userLoading(action) {
     try {
-        console.log(action, "userLoading");
         const result = yield call(userLoadingAPI, action.payload);
         yield put({
             type: USER_LOADING_SUCCESS,
@@ -123,7 +118,6 @@ function* watchUserLoading() {
 
 // Login
 const registerUserAPI = (req) => {
-    console.log(req, "register Data");
     return axios.post('api/user', req);
 }
 
@@ -131,8 +125,6 @@ const registerUserAPI = (req) => {
 function* registerUser(action) {
     try {
         const result = yield call(registerUserAPI, action.payload);
-        console.log(result, "RegisterUser Data")
-        console.log(result);
         yield put({
             type: REGISTER_SUCCESS,
             payload: result.data

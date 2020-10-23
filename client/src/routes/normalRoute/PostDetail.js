@@ -18,7 +18,6 @@ const PostDetail = (req) => {
     const {userId, userName} = useSelector((state) => state.auth);
     const {comments} = useSelector((state) => state.comment);
 
-    console.log(req);
     useEffect(() => {
         dispatch({
             type: POST_DETAIL_LOADING_REQUEST,
@@ -28,7 +27,7 @@ const PostDetail = (req) => {
             type: USER_LOADING_REQUEST,
             payload: localStorage.getItem('token')
         })
-    }, [])
+    }, [dispatch, req.match.params.id])
 
     const onDeleteClick = () => {
         dispatch({

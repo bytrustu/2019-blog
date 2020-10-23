@@ -44,7 +44,6 @@ const PostCardList = () => {
                         skipNumberRef.current += 6;
                     } else {
                         endMsg.current = true;
-                        console.log(endMsg.current);
                     }
                 }
             }, options);
@@ -69,7 +68,6 @@ const PostCardList = () => {
     const [lastPostElementRef, visible] = useOnScreen({
         threshold: "0.5",
     });
-    console.log(visible, "visible", skipNumberRef.current, "skipNum");
 
     return (
         <Fragment>

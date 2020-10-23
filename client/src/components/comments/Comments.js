@@ -26,7 +26,6 @@ const Comments = ({id, userId, userName}) => {
     const resetValue = useRef();
     const onChange = (e) => {
         setForm(e.target.value);
-        console.log(form.contents);
     }
 
     useEffect(() => {

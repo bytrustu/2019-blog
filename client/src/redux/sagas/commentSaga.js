@@ -12,14 +12,12 @@ import {push} from 'connected-react-router';
 // Load Comment
 
 const loadCommentsAPI = payload => {
-    console.log(payload, "loadCommentsAPI ID");
     return axios.get(`/api/post/${payload}/comments`);
 }
 
 function* loadComments(action) {
     try {
         const result = yield call(loadCommentsAPI, action.payload);
-        console.log(result, 'loadComments result');
         yield put({
             type: COMMENT_LOADING_SUCCESS,
             payload: result.data
@@ -40,14 +38,12 @@ function* watchLoadComments() {
 
 // Upload Comment
 const uploadCommentsAPI = payload => {
-    console.log(payload.id, "uploadCommentsAPI ID");
     return axios.post(`/api/post/${payload.id}/comments`, payload);
 }
 
 function* uploadComments(action) {
     try {
         const result = yield call(uploadCommentsAPI, action.payload);
-        console.log(result, 'uploadComments result');
         yield put({
             type: COMMENT_UPLOADING_SUCCESS,
             payload: result.data

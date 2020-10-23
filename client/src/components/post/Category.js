@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import {Button, Badge} from "reactstrap";
 
 const Category = ({posts}) => {
-    console.log(posts);
     return (
         <>
             {Array.isArray(posts) &&

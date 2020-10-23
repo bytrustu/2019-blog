@@ -10,7 +10,6 @@ import SearchInput from "./search/SearchInput";
 const AppNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const {isAuthenticated, user, userRole} = useSelector((state) => state.auth);
-    console.log(userRole, "userRole");
 
     const dispatch = useDispatch();
 

@@ -84,14 +84,12 @@ function* watchUploadPost() {
 
 // Post Detail
 const loadPostDetailAPI = (payload) => {
-    console.log(payload)
     return axios.get(`/api/post/${payload}`)
 }
 
 function* loadPostDetail(action) {
     try {
         const result = yield call(loadPostDetailAPI, action.payload);
-        console.log(result, 'post_detail_saga_data');
         yield put({
             type: POST_DETAIL_LOADING_SUCCESS,
             payload: result.data,
