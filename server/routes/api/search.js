@@ -1,0 +1,21 @@
+const express = require('express');
+const router = express.Router();
+
+const Post = require('../../models/post')
+
+router.get('/:searchTerm', async (req, res, next) => {
+    try {
+        const result = await Post.find({
+            title: {
+                $regex: req.params.searchTerm,
+                $options: 'i'
+            }
+        });
+        res.send(result);
+    } catch (e) {
+        console.log(e);
+        next(e);
+    }
+})
+
+module.exports = router;

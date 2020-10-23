@@ -25,13 +25,13 @@ const PostSchema = new mongoose.Schema({
         ref: "category"
     },
     date: {
-        type: Date,
+        type: String,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
     },
     comments: [
         {
            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user'
+            ref: 'comment'
         }
     ],
     creator: {

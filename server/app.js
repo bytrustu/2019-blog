@@ -13,8 +13,9 @@ const {MONGO_URI} = config;
 const postsRoutes = require('./routes/api/post');
 const userRoutes = require('./routes/api/user');
 const authRoutes = require('./routes/api/auth');
+const searchRoutes = require('./routes/api/search');
 
-
+app.set("etag", false);
 app.get(hpp());
 app.use(helmet());
 app.use(cors({origin: true, credentials: true}));
@@ -29,9 +30,9 @@ mongoose.connect(MONGO_URI, {
     .catch((e) => console.log(e));
 
 // Use routes
-app.get('/');
 app.use('/api/post', postsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/search', searchRoutes);
 
 module.exports = app;
