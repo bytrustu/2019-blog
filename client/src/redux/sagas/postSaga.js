@@ -1,9 +1,16 @@
 import {
-    POST_DELETE_FAILURE, POST_DELETE_REQUEST,
+    POST_DELETE_FAILURE,
+    POST_DELETE_REQUEST,
     POST_DELETE_SUCCESS,
-    POST_DETAIL_LOADING_FAILURE, POST_DETAIL_LOADING_REQUEST,
+    POST_DETAIL_LOADING_FAILURE,
+    POST_DETAIL_LOADING_REQUEST,
     POST_DETAIL_LOADING_SUCCESS,
-    POST_UPLOADING_FAILURE, POST_UPLOADING_REQUEST,
+    POST_EDIT_LOADING_FAILURE,
+    POST_EDIT_LOADING_REQUEST,
+    POST_EDIT_LOADING_SUCCESS, POST_EDIT_UPLOADING_FAILURE, POST_EDIT_UPLOADING_REQUEST,
+    POST_EDIT_UPLOADING_SUCCESS,
+    POST_UPLOADING_FAILURE,
+    POST_UPLOADING_REQUEST,
     POST_UPLOADING_SUCCESS,
     POSTS_LOADING_FAILURE,
     POSTS_LOADING_REQUEST,
@@ -138,7 +145,74 @@ function* watchDeletePost() {
     yield takeEvery(POST_DELETE_REQUEST, deletePost);
 }
 
+// Post Edit Load
+const postEditLoadAPI = (payload) => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    const token = payload.token;
 
+    if (token) {
+        config.headers["x-auth-token"] = token;
+    }
+    return axios.get(`/api/post/${payload.id}/edit`, config);
+};
+
+function* postEditLoad(action) {
+    try {
+        const result = yield call(postEditLoadAPI, action.payload);
+        yield put({
+            type: POST_EDIT_LOADING_SUCCESS,
+            payload: result.data,
+        });
+    } catch (e) {
+        yield put({
+            type: POST_EDIT_LOADING_FAILURE,
+            payload: e
+        })
+    }
+}
+
+function* watchPostEditLoad() {
+    yield takeEvery(POST_EDIT_LOADING_REQUEST, postEditLoad);
+}
+
+// Post Edit Load
+const postEditUploadAPI = (payload) => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    const token = payload.token;
+
+    if (token) {
+        config.headers["x-auth-token"] = token;
+    }
+    return axios.post(`/api/post/${payload.id}/edit`, payload, config);
+};
+
+function* postEditUpload(action) {
+    try {
+        const result = yield call(postEditUploadAPI, action.payload);
+        yield put({
+            type: POST_EDIT_UPLOADING_SUCCESS,
+            payload: result.data,
+        });
+        yield put(push(`/post/${result.data._id}`))
+    } catch (e) {
+        yield put({
+            type: POST_EDIT_UPLOADING_FAILURE,
+            payload: e
+        });
+    }
+}
+
+function* watchPostEditUpload() {
+    yield takeEvery(POST_EDIT_UPLOADING_REQUEST, postEditUpload);
+}
 
 export default function* postSaga() {
     yield all([
@@ -146,5 +220,7 @@ export default function* postSaga() {
         fork(watchUploadPost),
         fork(watchLoadPostDetail),
         fork(watchDeletePost),
-    ])
+        fork(watchPostEditLoad),
+        fork(watchPostEditUpload),
+    ]);
 }
