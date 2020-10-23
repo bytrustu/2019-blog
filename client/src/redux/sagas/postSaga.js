@@ -103,6 +103,7 @@ function* watchLoadPostDetail() {
 }
 
 
+
 export default function* postSaga() {
     yield all([
         fork(watchLoadPost),
