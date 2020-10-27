@@ -11,6 +11,7 @@ const app = express();
 const {MONGO_URI} = config;
 
 const prod = process.env.NODE_ENV === 'production';
+console.log(`prod >>>>>`, prod);
 
 // Routes
 const postsRoutes = require('./routes/api/post');
@@ -21,8 +22,25 @@ const searchRoutes = require('./routes/api/search');
 app.set("etag", false);
 app.get(hpp());
 app.use(helmet());
-app.use(cors({origin: true, credentials: true}));
-app.use(morgan("dev"))
+
+if (prod) {
+    app.use(
+        cors({
+            origin: ["http://localhost"],
+            credentials: true,
+        })
+    );
+
+} else {
+    app.use(morgan("dev"));
+    app.use(
+        cors({
+            origin: true,
+            credentials: true,
+        })
+    );
+}
+
 app.use(express.json())
 
 mongoose.connect(MONGO_URI, {
